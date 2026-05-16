@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #f5f3ef;
+        --bg-2: #d7e9ee;
+        --card: rgba(255, 255, 255, 0.82);
+        --ink: #1f2a34;
+        --muted: #53616f;
+        --accent: #0f766e;
+        --accent-2: #134e4a;
+        --warn: #b91c1c;
+        --ok: #065f46;
+        --line: #d0dae2;
+        --shadow: 0 14px 30px rgba(15, 35, 46, 0.14);
+        --radius: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Space Grotesk", sans-serif;
+        background:
+          radial-gradient(1200px 560px at 12% -8%, #ffe5c6 0%, transparent 60%),
+          radial-gradient(900px 520px at 94% 6%, #b7d9e6 0%, transparent 56%),
+          linear-gradient(165deg, var(--bg-1), var(--bg-2));
+        padding: 32px 16px;
+      }
+
+      .wrap {
+        width: min(1050px, 100%);
+        margin: 0 auto;
+        animation: rise 500ms ease-out;
+      }
+
+      .hero {
+        margin-bottom: 20px;
+      }
+
+      .tag {
+        display: inline-block;
+        background: rgba(19, 78, 74, 0.14);
+        color: var(--accent-2);
+        border: 1px solid rgba(19, 78, 74, 0.24);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.1;
+        letter-spacing: 0.02em;
+      }
+
+      .sub {
+        margin: 10px 0 0;
+        color: var(--muted);
+        max-width: 720px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .card {
+        background: var(--card);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .card h2 {
+        margin: 0 0 14px;
+        font-size: 1.1rem;
+        letter-spacing: 0.01em;
+      }
+
+      .form {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font: inherit;
+        color: var(--ink);
+        background: #ffffff;
+        outline: none;
+        transition:
+          border-color 120ms ease,
+          box-shadow 120ms ease;
+      }
+
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 600;
+        transition:
+          transform 120ms ease,
+          opacity 120ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-main {
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .btn-muted {
+        background: #e5e7eb;
+        color: #1f2937;
+      }
+
+      .btn-danger {
+        background: #fee2e2;
+        color: #7f1d1d;
+      }
+
+      .panel-top {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .panel-top .left {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        background: #eef7f6;
+        color: var(--accent-2);
+        border: 1px solid #bfdbd8;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid #dbe5ec;
+        background: #ffffff;
+      }
+
+      th,
+      td {
+        padding: 11px 10px;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+        vertical-align: middle;
+      }
+
+      th {
+        color: #334155;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        background: #f8fafc;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .row-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .row-actions button {
+        padding: 6px 10px;
+        border-radius: 9px;
+        font-size: 0.84rem;
+        font-weight: 600;
+      }
+
+      .note {
+        margin-top: 12px;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 0.92rem;
+        display: none;
+      }
+
+      .note.show {
+        display: block;
+        animation: fade 160ms ease;
+      }
+
+      .note.ok {
+        background: #dcfce7;
+        color: var(--ok);
+        border: 1px solid #86efac;
+      }
+
+      .note.err {
+        background: #fee2e2;
+        color: var(--warn);
+        border: 1px solid #fca5a5;
+      }
+
+      .error-list {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .pager {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      .pager .meta {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .empty {
+        text-align: center;
+        padding: 28px 10px;
+        color: var(--muted);
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <span class="tag">Student Manager</span>
+        <h1>Simple Browser UI for Student CRUD</h1>
+        <p class="sub">
+          Use this page for day-to-day operations and keep Postman for API
+          testing. Create, edit, delete, and page through students here.
+        </p>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2 id="formTitle">Add Student</h2>
+          <form id="studentForm" class="form">
+            <label>
+              Name
+              <input
+                id="name"
+                name="name"
+                type="text"
+                maxlength="80"
+                required
+              />
+            </label>
+
+            <label>
+              Email
+              <input
+                id="email"
+                name="email"
+                type="email"
+                maxlength="120"
+                required
+              />
+            </label>
+
+            <label>
+              Course
+              <input
+                id="course"
+                name="course"
+                type="text"
+                maxlength="80"
+                required
+              />
+            </label>
+
+            <div class="actions">
+              <button type="submit" class="btn-main" id="saveBtn">
+                Create Student
+              </button>
+              <button type="button" class="btn-muted" id="cancelEditBtn" hidden>
+                Cancel Edit
+              </button>
+            </div>
+          </form>
+          <div id="formMessage" class="note"></div>
+        </article>
+
+        <article class="card">
+          <div class="panel-top">
+            <div class="left">
+              <h2 style="margin: 0">Students</h2>
+              <span id="countPill" class="pill">Total: 0</span>
+            </div>
+
+            <div class="left">
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  color: var(--muted);
+                "
+              >
+                Search
+                <input
+                  id="searchInput"
+                  type="text"
+                  maxlength="120"
+                  placeholder="Name or email"
+                  style="width: 180px"
+                />
+              </label>
+              <button id="searchBtn" class="btn-muted" type="button">
+                Search
+              </button>
+              <button id="clearSearchBtn" class="btn-muted" type="button">
+                Clear
+              </button>
+
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  color: var(--muted);
+                "
+              >
+                Page Size
+                <input
+                  id="sizeInput"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value="5"
+                  style="width: 84px"
+                />
+              </label>
+              <button id="refreshBtn" class="btn-muted" type="button">
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Course</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="pager">
+            <div id="pageMeta" class="meta">Page 1 of 1</div>
+            <div class="actions" style="margin: 0">
+              <button id="prevBtn" class="btn-muted" type="button">
+                Previous
+              </button>
+              <button id="nextBtn" class="btn-muted" type="button">Next</button>
+            </div>
+          </div>
+
+          <div id="tableMessage" class="note"></div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const API = "/students";
+
+      const form = document.getElementById("studentForm");
+      const formTitle = document.getElementById("formTitle");
+      const saveBtn = document.getElementById("saveBtn");
+      const cancelEditBtn = document.getElementById("cancelEditBtn");
+      const formMessage = document.getElementById("formMessage");
+
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const courseInput = document.getElementById("course");
+
+      const studentsBody = document.getElementById("studentsBody");
+      const tableMessage = document.getElementById("tableMessage");
+      const countPill = document.getElementById("countPill");
+      const pageMeta = document.getElementById("pageMeta");
+
+      const searchInput = document.getElementById("searchInput");
+      const searchBtn = document.getElementById("searchBtn");
+      const clearSearchBtn = document.getElementById("clearSearchBtn");
+      const sizeInput = document.getElementById("sizeInput");
+      const refreshBtn = document.getElementById("refreshBtn");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      let editId = null;
+      let currentPage = 0;
+      let totalPages = 1;
+      let currentSize = 5;
+      let currentQuery = "";
+
+      function setNote(el, type, text, list) {
+        el.className = "note show " + type;
+        if (Array.isArray(list) && list.length) {
+          el.innerHTML =
+            "<strong>" +
+            text +
+            '</strong><ul class="error-list">' +
+            list.map((item) => "<li>" + item + "</li>").join("") +
+            "</ul>";
+        } else {
+          el.textContent = text;
+        }
+      }
+
+      function clearNote(el) {
+        el.className = "note";
+        el.textContent = "";
+        el.innerHTML = "";
+      }
+
+      function resetForm() {
+        form.reset();
+        editId = null;
+        formTitle.textContent = "Add Student";
+        saveBtn.textContent = "Create Student";
+        cancelEditBtn.hidden = true;
+        clearNote(formMessage);
+        nameInput.focus();
+      }
+
+      function toPayload() {
+        return {
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          course: courseInput.value.trim(),
+        };
+      }
+
+      async function fetchPage(page) {
+        const params = new URLSearchParams({
+          page: String(page),
+          size: String(currentSize),
+        });
+        if (currentQuery) {
+          params.set("query", currentQuery);
+        }
+
+        const res = await fetch(API + "?" + params.toString());
+        if (!res.ok) {
+          let message = "Could not load students.";
+          try {
+            const err = await res.json();
+            if (err && err.error) {
+              message = err.error;
+            }
+          } catch (_) {
+            // Ignore parse error and use default message.
+          }
+          throw new Error(message);
+        }
+        return res.json();
+      }
+
+      function renderRows(students) {
+        if (!students.length) {
+          studentsBody.innerHTML =
+            '<tr><td class="empty" colspan="5">No students found for this page.</td></tr>';
+          return;
+        }
+
+        studentsBody.innerHTML = students
+          .map((s) => {
+            return (
+              "<tr>" +
+              "<td>" +
+              s.id +
+              "</td>" +
+              "<td>" +
+              escapeHtml(s.name) +
+              "</td>" +
+              "<td>" +
+              escapeHtml(s.email) +
+              "</td>" +
+              "<td>" +
+              escapeHtml(s.course) +
+              "</td>" +
+              '<td><div class="row-actions">' +
+              '<button class="btn-muted" data-edit="' +
+              s.id +
+              '">Edit</button>' +
+              '<button class="btn-danger" data-del="' +
+              s.id +
+              '">Delete</button>' +
+              "</div></td>" +
+              "</tr>"
+            );
+          })
+          .join("");
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      async function loadStudents(page = currentPage) {
+        clearNote(tableMessage);
+        try {
+          const data = await fetchPage(page);
+          const students = Array.isArray(data) ? data : data.content || [];
+          currentPage = data.number ?? page;
+          totalPages = Math.max(data.totalPages ?? 1, 1);
+
+          renderRows(students);
+
+          const total = data.totalElements ?? students.length;
+          countPill.textContent =
+            (currentQuery ? "Filtered: " : "Total: ") + total;
+          pageMeta.textContent =
+            "Page " + (currentPage + 1) + " of " + totalPages;
+
+          prevBtn.disabled = currentPage <= 0;
+          nextBtn.disabled = currentPage >= totalPages - 1;
+        } catch (err) {
+          studentsBody.innerHTML =
+            '<tr><td class="empty" colspan="5">Could not fetch data.</td></tr>';
+          setNote(tableMessage, "err", err.message || "Unexpected error.");
+        }
+      }
+
+      async function submitForm(event) {
+        event.preventDefault();
+        clearNote(formMessage);
+
+        const wasEdit = editId !== null;
+        const payload = toPayload();
+        const url = wasEdit ? API + "/" + editId : API;
+        const method = wasEdit ? "PUT" : "POST";
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let errors = [];
+          try {
+            const body = await res.json();
+            if (body && typeof body === "object") {
+              errors = Object.entries(body).map(([k, v]) => k + ": " + v);
+            }
+          } catch (_) {
+            // Ignore parse error and use generic message.
+          }
+
+          setNote(
+            formMessage,
+            "err",
+            "Could not save student.",
+            errors.length ? errors : null,
+          );
+          return;
+        }
+
+        resetForm();
+        setNote(
+          formMessage,
+          "ok",
+          wasEdit ? "Student updated." : "Student created.",
+        );
+
+        if (wasEdit) {
+          await loadStudents(currentPage);
+        } else {
+          await loadStudents(0);
+        }
+      }
+
+      async function deleteStudent(id) {
+        clearNote(tableMessage);
+        const confirmed = window.confirm("Delete student " + id + "?");
+        if (!confirmed) {
+          return;
+        }
+
+        const res = await fetch(API + "/" + id, { method: "DELETE" });
+        if (!res.ok) {
+          let message = "Delete failed.";
+          try {
+            const body = await res.json();
+            if (body && body.error) {
+              message = body.error;
+            }
+          } catch (_) {
+            // Ignore parse error.
+          }
+          setNote(tableMessage, "err", message);
+          return;
+        }
+
+        setNote(tableMessage, "ok", "Student deleted.");
+        if (currentPage > 0 && studentsBody.children.length <= 1) {
+          currentPage -= 1;
+        }
+        await loadStudents(currentPage);
+      }
+
+      function beginEdit(student) {
+        editId = student.id;
+        nameInput.value = student.name || "";
+        emailInput.value = student.email || "";
+        courseInput.value = student.course || "";
+        formTitle.textContent = "Edit Student #" + student.id;
+        saveBtn.textContent = "Update Student";
+        cancelEditBtn.hidden = false;
+        clearNote(formMessage);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      studentsBody.addEventListener("click", (event) => {
+        const edit = event.target.getAttribute("data-edit");
+        const del = event.target.getAttribute("data-del");
+
+        if (edit) {
+          const row = event.target.closest("tr");
+          const student = {
+            id: Number(edit),
+            name: row.children[1].textContent,
+            email: row.children[2].textContent,
+            course: row.children[3].textContent,
+          };
+          beginEdit(student);
+        }
+
+        if (del) {
+          deleteStudent(Number(del));
+        }
+      });
+
+      form.addEventListener("submit", submitForm);
+
+      cancelEditBtn.addEventListener("click", () => {
+        resetForm();
+      });
+
+      refreshBtn.addEventListener("click", async () => {
+        const value = Number(sizeInput.value);
+        currentSize =
+          Number.isFinite(value) && value > 0 ? Math.min(value, 100) : 5;
+        sizeInput.value = String(currentSize);
+        currentPage = 0;
+        await loadStudents(0);
+      });
+
+      searchBtn.addEventListener("click", async () => {
+        currentQuery = searchInput.value.trim();
+        currentPage = 0;
+        await loadStudents(0);
+      });
+
+      clearSearchBtn.addEventListener("click", async () => {
+        searchInput.value = "";
+        currentQuery = "";
+        currentPage = 0;
+        await loadStudents(0);
+      });
+
+      searchInput.addEventListener("keydown", async (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          currentQuery = searchInput.value.trim();
+          currentPage = 0;
+          await loadStudents(0);
+        }
+      });
+
+      prevBtn.addEventListener("click", async () => {
+        if (currentPage > 0) {
+          await loadStudents(currentPage - 1);
+        }
+      });
+
+      nextBtn.addEventListener("click", async () => {
+        if (currentPage < totalPages - 1) {
+          await loadStudents(currentPage + 1);
+        }
+      });
+
+      (function init() {
+        currentSize = Number(sizeInput.value) || 5;
+        loadStudents(0);
+      })();
+    </script>
+  </body>
+</html>

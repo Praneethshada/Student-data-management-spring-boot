@@ -1,0 +1,66 @@
+package com.example.student.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import jakarta.validation.ConstraintViolationException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFound(ResourceNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        return errors;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String field = violation.getPropertyPath().toString();
+            if (field.contains(".")) {
+                field = field.substring(field.lastIndexOf('.') + 1);
+            }
+            errors.put(field, violation.getMessage());
+        });
+
+        return errors;
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        Map<String, String> error = new HashMap<>();
+        String param = ex.getName();
+        Object value = ex.getValue();
+
+        if ("id".equals(param)) {
+            error.put("id", "Invalid id: must be a number");
+        } else {
+            error.put(param, "Invalid value: " + value);
+        }
+
+        return error;
+    }
+}

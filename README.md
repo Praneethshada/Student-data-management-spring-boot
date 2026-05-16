@@ -15,6 +15,14 @@ I built this project to practice and demonstrate my skills in backend developmen
 - **Dependency Management**: I used Maven to manage all the project's dependencies and to build the application.
 - **Secure Credential Management**: I configured the application to use environment variables for database credentials, which is a much safer practice than hardcoding them.
 
+## Design Patterns and Principles
+
+- **Layered Architecture**: I organized the code into distinct layers (Controller, Service, and Repository) to separate concerns and make the application easier to manage and scale.
+- **Repository Pattern**: I used the Repository pattern to abstract the data access logic, making it easy to manage database operations without mixing them with business logic.
+- **Data Transfer Object (DTO) Pattern**: I used DTOs to transfer data between the controller and service layers. This helps prevent exposing the internal database structure and allows for more flexible data contracts.
+- **Dependency Injection (DI)**: I relied on Spring's dependency injection to manage the components and their dependencies, which makes the code more modular and easier to test.
+- **Single Responsibility Principle (SRP)**: Each class in the application has a single, clear purpose—the controller handles web requests, the service contains business logic, and the repository manages data.
+
 ## Features
 
 - **CRUD Operations**: You can create, read, update, and delete student records.

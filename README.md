@@ -1,4 +1,4 @@
-# Student Management System
+# Student Data Management with Spring Boot
 
 This is a simple web application I built to manage student records. It's a RESTful API created with Java and Spring Boot that lets you perform all the basic CRUD (Create, Read, Update, Delete) operations for students.
 

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — EduTrack</title>
+  <meta name="description" content="Sign in to your EduTrack institution account to manage your students." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #070713;
+      --card:     #0e0e2a;
+      --border:   rgba(108,99,255,0.22);
+      --primary:  #6c63ff;
+      --accent:   #00d4ff;
+      --grad-btn: linear-gradient(135deg, #6c63ff, #00d4ff);
+      --text:     #f0f0ff;
+      --muted:    #8888b0;
+      --error:    #ff6b6b;
+      --success:  #00d4a0;
+      --input-bg: rgba(255,255,255,0.04);
+    }
+
+    html { height: 100%; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -250px; right: -250px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* Brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+    }
+    .brand-icon {
+      width: 40px; height: 40px;
+      background: var(--grad-btn);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 24px rgba(108,99,255,0.5);
+    }
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: var(--grad-btn);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 80px rgba(108,99,255,0.18);
+      position: relative;
+      z-index: 1;
+      animation: rise 0.5s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header { margin-bottom: 2rem; }
+    .card-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.4rem;
+    }
+    .card-header p { color: var(--muted); font-size: 0.93rem; }
+
+    /* Form */
+    .form { display: flex; flex-direction: column; gap: 1.1rem; }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    input {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font: inherit;
+      font-size: 0.97rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input::placeholder { color: rgba(136,136,176,0.6); }
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.18);
+      background: rgba(108,99,255,0.05);
+    }
+
+    .btn-submit {
+      margin-top: 0.5rem;
+      padding: 0.85rem;
+      background: var(--grad-btn);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 28px rgba(108,99,255,0.45);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 40px rgba(108,99,255,0.65);
+    }
+    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    /* Spinner inside button */
+    .btn-submit .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Alert box */
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: none;
+      margin-top: -0.3rem;
+    }
+    .alert.show { display: block; animation: fadeIn 0.2s ease; }
+    .alert.error   { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: var(--error); }
+    .alert.success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); color: var(--success); }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Footer link */
+    .card-footer {
+      margin-top: 1.8rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .card-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .card-footer a:hover { color: #fff; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.5rem 0 1.2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <a href="/landing.html" class="brand" id="brand-link">
+    <div class="brand-icon">🎓</div>
+    <span class="brand-name">EduTrack</span>
+  </a>
+
+  <div class="card">
+    <div class="card-header">
+      <h1>Welcome back</h1>
+      <p>Sign in to your institution account</p>
+    </div>
+
+    <form class="form" id="loginForm" novalidate>
+      <label for="email">
+        Institution Email
+        <input type="email" id="email" name="email" placeholder="admin@university.edu" autocomplete="email" required />
+      </label>
+
+      <label for="password">
+        Password
+        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+      </label>
+
+      <div class="alert error" id="errorMsg" role="alert"></div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">Sign In</span>
+        <span class="spinner"></span>
+      </button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="card-footer">
+      New institution? <a href="/register.html" id="register-link">Create an account →</a>
+    </div>
+  </div>
+
+  <script>
+    const form     = document.getElementById('loginForm');
+    const btn      = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // If already logged in, skip to app
+    fetch('/auth/me').then(r => {
+      if (r.ok) window.location.href = '/index.html';
+    }).catch(() => {});
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.className = 'alert error show';
+    }
+
+    function hideError() {
+      errorMsg.className = 'alert error';
+    }
+
+    function setLoading(on) {
+      btn.disabled = on;
+      btn.classList.toggle('loading', on);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        showError('Please enter your email and password.');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (res.ok) {
+          window.location.href = '/index.html';
+        } else {
+          const body = await res.json().catch(() => ({}));
+          showError(body.error || 'Invalid email or password. Please try again.');
+        }
+      } catch (err) {
+        showError('Network error. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>

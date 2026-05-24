@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Desk</title>
+    <title>EduTrack — Student Manager</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,6 +25,54 @@
         --shadow: 0 14px 30px rgba(15, 35, 46, 0.14);
         --radius: 18px;
       }
+
+      /* ── Institution header bar ─────────────────── */
+      .inst-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .inst-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--accent-2);
+      }
+      .inst-brand .icon {
+        width: 32px; height: 32px;
+        background: linear-gradient(135deg, #0f766e, #134e4a);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        color: #fff;
+      }
+      .inst-name-text {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--accent-2);
+      }
+      .btn-logout {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 7px 14px;
+        background: #fee2e2;
+        color: #7f1d1d;
+        border: 1px solid #fca5a5;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+      }
+      .btn-logout:hover { background: #fecaca; transform: translateY(-1px); }
 
       * {
         box-sizing: border-box;
@@ -322,12 +370,24 @@
   </head>
   <body>
     <main class="wrap">
+
+      <!-- Institution header bar -->
+      <div class="inst-bar">
+        <div class="inst-brand">
+          <div class="icon">🎓</div>
+          <span class="inst-name-text" id="instName">Loading…</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" type="button">
+          <span>⎋</span> Logout
+        </button>
+      </div>
+
       <section class="hero">
         <span class="tag">Student Manager</span>
-        <h1>Simple Browser UI for Student CRUD</h1>
+        <h1 id="pageTitle">Student Records</h1>
         <p class="sub">
-          Use this page for day-to-day operations and keep Postman for API
-          testing. Create, edit, delete, and page through students here.
+          Manage your institution's student data. All records shown here belong
+          only to your institution.
         </p>
       </section>
 
@@ -469,6 +529,41 @@
     <script>
       const API = "/students";
 
+      // ── Auth guard ────────────────────────────────────────────────────────────
+      // On page load, verify session. If 401, redirect to login.
+      (async function authGuard() {
+        try {
+          const res = await fetch('/auth/me');
+          if (res.status === 401) {
+            window.location.href = '/login.html';
+            return;
+          }
+          if (res.ok) {
+            const inst = await res.json();
+            document.getElementById('instName').textContent = inst.name;
+            document.getElementById('pageTitle').textContent = inst.name + ' — Students';
+          }
+        } catch (e) {
+          // network error — still let the page load
+        }
+      })();
+
+      // ── Logout button ─────────────────────────────────────────────────────────
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await fetch('/auth/logout', { method: 'POST' });
+        window.location.href = '/login.html';
+      });
+
+      // Helper: redirect to login on any 401 from the student API
+      async function guardedFetch(url, options) {
+        const res = await fetch(url, options);
+        if (res.status === 401) {
+          window.location.href = '/login.html';
+          throw new Error('Unauthorized');
+        }
+        return res;
+      }
+
       const form = document.getElementById("studentForm");
       const formTitle = document.getElementById("formTitle");
       const saveBtn = document.getElementById("saveBtn");
@@ -545,7 +640,7 @@
           params.set("query", currentQuery);
         }
 
-        const res = await fetch(API + "?" + params.toString());
+        const res = await guardedFetch(API + "?" + params.toString());
         if (!res.ok) {
           let message = "Could not load students.";
           try {
@@ -641,7 +736,7 @@
         const url = wasEdit ? API + "/" + editId : API;
         const method = wasEdit ? "PUT" : "POST";
 
-        const res = await fetch(url, {
+        const res = await guardedFetch(url, {
           method,
           headers: {
             "Content-Type": "application/json",
@@ -690,7 +785,7 @@
           return;
         }
 
-        const res = await fetch(API + "/" + id, { method: "DELETE" });
+        const res = await guardedFetch(API + "/" + id, { method: "DELETE" });
         if (!res.ok) {
           let message = "Delete failed.";
           try {

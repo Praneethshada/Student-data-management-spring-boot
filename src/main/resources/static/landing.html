@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduTrack – Smart Student Management for Modern Institutions</title>
+  <meta name="description" content="EduTrack is the all-in-one student data management platform built for universities, colleges, and schools. Streamline enrollment, track academics, and empower administrators with powerful RESTful tools." />
+  <meta property="og:title" content="EduTrack – Smart Student Management for Modern Institutions" />
+  <meta property="og:description" content="Streamline enrollment, track academics, and empower administrators with the most capable student management platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:       #070713;
+      --bg-card:       #0e0e2a;
+      --bg-card2:      #12122e;
+      --primary:       #6c63ff;
+      --primary-light: #8b85ff;
+      --accent:        #00d4ff;
+      --accent2:       #a855f7;
+      --text-primary:  #f0f0ff;
+      --text-muted:    #8888b0;
+      --border:        rgba(108,99,255,0.22);
+      --border-glow:   rgba(0,212,255,0.35);
+      --grad-hero:     linear-gradient(135deg, #070713 0%, #0e0830 50%, #070713 100%);
+      --grad-btn:      linear-gradient(135deg, #6c63ff, #00d4ff);
+      --grad-accent:   linear-gradient(135deg, #6c63ff, #a855f7);
+      --shadow-card:   0 8px 40px rgba(108,99,255,0.14);
+      --shadow-glow:   0 0 60px rgba(108,99,255,0.22);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ─── NOISE OVERLAY ─────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── NAVBAR ────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 6%;
+      background: rgba(7,7,19,0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+
+    .nav-logo .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--grad-btn);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 20px rgba(108,99,255,0.45);
+    }
+
+    .nav-logo span {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.45rem;
+      letter-spacing: -0.5px;
+      background: var(--grad-btn);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .btn-nav {
+      padding: 0.55rem 1.4rem;
+      border-radius: 50px;
+      background: var(--grad-btn);
+      color: #fff !important;
+      font-weight: 600;
+      font-size: 0.92rem;
+      box-shadow: 0 0 20px rgba(108,99,255,0.4);
+      transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+
+    .btn-nav:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 35px rgba(108,99,255,0.6) !important;
+      color: #fff;
+    }
+
+    /* ─── HERO ──────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 6% 5rem;
+      overflow: hidden;
+      background: var(--grad-hero);
+    }
+
+    /* Glowing orbs */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-orb-bottom {
+      position: absolute;
+      bottom: -180px; left: -180px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 620px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border-glow);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(0,212,255,0.07);
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      animation: fadeSlideDown 0.7s ease both;
+    }
+
+    .hero-badge::before {
+      content: '●';
+      font-size: 0.55rem;
+      color: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.6rem, 5.5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.5rem;
+      animation: fadeSlideDown 0.8s 0.1s ease both;
+    }
+
+    h1 .highlight {
+      background: var(--grad-btn);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+      animation: fadeSlideDown 0.8s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeSlideDown 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--grad-btn);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 0 30px rgba(108,99,255,0.5);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 40px rgba(108,99,255,0.7);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary-light);
+      background: rgba(108,99,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    .hero-image-wrap {
+      position: absolute;
+      right: 4%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 48%;
+      max-width: 680px;
+      animation: floatUp 1s 0.4s ease both;
+    }
+
+    .hero-image-wrap img {
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(108,99,255,0.35);
+      border: 1px solid var(--border);
+    }
+
+    /* Floating stat cards */
+    .stat-card {
+      position: absolute;
+      background: rgba(14,14,42,0.9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.9rem 1.2rem;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-card);
+      animation: floatCard 4s ease-in-out infinite;
+    }
+
+    .stat-card .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: var(--grad-btn);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-card-1 { top: 16%; left: -5%; animation-delay: 0s; }
+    .stat-card-2 { bottom: 18%; right: -4%; animation-delay: 1.5s; }
+
+    /* ─── LOGO STRIP ─────────────────────────── */
+    .logo-strip {
+      padding: 2.5rem 0;
+      background: rgba(14,14,42,0.6);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .logo-strip-label {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .logo-ticker {
+      display: inline-flex;
+      gap: 3.5rem;
+      animation: ticker 25s linear infinite;
+    }
+
+    .logo-ticker span {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-muted);
+      letter-spacing: -0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .logo-ticker span:hover { opacity: 1; }
+    .logo-ticker span::before { content: attr(data-icon); font-size: 1.1rem; }
+
+    /* ─── SECTION COMMONS ────────────────────── */
+    section { position: relative; z-index: 1; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+      line-height: 1.75;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 6%;
+    }
+
+    /* ─── FEATURES ──────────────────────────── */
+    .features {
+      padding: 6rem 0;
+      background: var(--bg-dark);
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .features-header .section-desc { margin: 0 auto; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--grad-accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 0;
+    }
+
+    .feature-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: var(--shadow-glow); }
+    .feature-card:hover::before { opacity: 0.04; }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.3rem;
+      position: relative;
+      z-index: 1;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover .feature-icon {
+      background: rgba(108,99,255,0.2);
+      box-shadow: 0 0 20px rgba(108,99,255,0.35);
+    }
+
+    .feature-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.7rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.93rem;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── HOW IT WORKS ──────────────────────── */
+    .how-it-works {
+      padding: 6rem 0;
+      background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 50%, var(--bg-dark) 100%);
+    }
+
+    .how-flex {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .steps-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 2.5rem; }
+
+    .step {
+      display: flex;
+      gap: 1.3rem;
+      align-items: flex-start;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: default;
+    }
+
+    .step:hover {
+      border-color: var(--border);
+      background: rgba(108,99,255,0.06);
+    }
+
+    .step-num {
+      width: 42px; height: 42px;
+      flex-shrink: 0;
+      background: var(--grad-btn);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(108,99,255,0.4);
+    }
+
+    .step h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .step p { color: var(--text-muted); font-size: 0.91rem; line-height: 1.65; }
+
+    /* API preview box */
+    .api-preview {
+      background: #090920;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .api-preview-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.4rem;
+      background: rgba(108,99,255,0.08);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .api-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .api-dot.red   { background: #ff5f57; }
+    .api-dot.yel   { background: #ffbd2e; }
+    .api-dot.grn   { background: #28c840; }
+
+    .api-title { margin-left: 0.6rem; font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+
+    .api-body { padding: 1.5rem; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 2; }
+    .api-body .method-get    { color: #4ec9b0; font-weight: 700; }
+    .api-body .method-post   { color: #dcdcaa; font-weight: 700; }
+    .api-body .method-put    { color: #ce9178; font-weight: 700; }
+    .api-body .method-delete { color: #f48771; font-weight: 700; }
+    .api-body .endpoint      { color: var(--accent); }
+    .api-body .comment       { color: #6a9955; }
+    .api-body .status        { color: #b5cea8; font-size: 0.78rem; }
+
+    .api-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+
+    .tag-get    { background: rgba(78,201,176,0.15); color: #4ec9b0; }
+    .tag-post   { background: rgba(220,220,170,0.15); color: #dcdcaa; }
+    .tag-put    { background: rgba(206,145,120,0.15); color: #ce9178; }
+    .tag-delete { background: rgba(244,135,113,0.15); color: #f48771; }
+
+    /* ─── STATS BAND ────────────────────────── */
+    .stats-band {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(0,212,255,0.06) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-item .num {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      background: var(--grad-btn);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-item .label {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .stat-item .sublabel {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 0.2rem;
+    }
+
+    /* ─── TESTIMONIALS ──────────────────────── */
+    .testimonials {
+      padding: 6rem 0;
+      background: var(--bg-dark);
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .testimonials-header .section-desc { margin: 0 auto; }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s;
+      position: relative;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,0.4);
+    }
+
+    .stars { color: #f5a623; font-size: 1rem; margin-bottom: 1.1rem; letter-spacing: 2px; }
+
+    .testimonial-card blockquote {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .testimonial-card blockquote::before {
+      content: '"';
+      font-size: 2.5rem;
+      color: var(--primary);
+      font-family: 'Outfit', sans-serif;
+      line-height: 0.5;
+      vertical-align: -0.6rem;
+      margin-right: 0.15rem;
+      font-style: normal;
+    }
+
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .reviewer-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .reviewer-name { font-weight: 700; font-size: 0.92rem; }
+    .reviewer-role { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.15rem; }
+
+    /* ─── TECH STACK ─────────────────────────── */
+    .tech-stack {
+      padding: 5rem 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+    }
+
+    .tech-header { text-align: center; margin-bottom: 3rem; }
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .tech-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.65rem 1.3rem;
+      background: rgba(108,99,255,0.09);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    }
+
+    .tech-pill:hover {
+      border-color: var(--primary);
+      background: rgba(108,99,255,0.18);
+      transform: translateY(-2px);
+    }
+
+    .tech-pill .ti { font-size: 1.15rem; }
+
+    /* ─── CTA BAND ───────────────────────────── */
+    .cta-band {
+      padding: 7rem 0;
+      background: var(--bg-dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px; height: 400px;
+      background: radial-gradient(ellipse, rgba(108,99,255,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-band .section-title {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      margin-bottom: 1.2rem;
+    }
+
+    .cta-band .section-desc {
+      position: relative;
+      z-index: 1;
+      margin: 0 auto 2.5rem;
+      max-width: 540px;
+    }
+
+    .cta-band .btn-primary {
+      position: relative;
+      z-index: 1;
+      font-size: 1.05rem;
+      padding: 1rem 2.4rem;
+    }
+
+    /* ─── FOOTER ─────────────────────────────── */
+    footer {
+      background: #04040f;
+      border-top: 1px solid var(--border);
+      padding: 3rem 6%;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-copy {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ─── ANIMATIONS ─────────────────────────── */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(60px) translateY(-50%); }
+      to   { opacity: 1; transform: translateY(-50%); }
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 960px) {
+      .hero { padding-bottom: 20rem; }
+      .hero-image-wrap { position: relative; right: auto; top: auto; transform: none; width: 100%; max-width: 100%; margin-top: 3rem; animation: none; }
+      .hero { flex-direction: column; align-items: flex-start; }
+      .how-flex { grid-template-columns: 1fr; gap: 3rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      h1 { font-size: 2.3rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .hero { padding-bottom: 4rem; }
+      .hero-image-wrap { display: none; }
+      .stat-card { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─────────────────────────────── -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo" aria-label="EduTrack Home">
+      <div class="logo-icon">🎓</div>
+      <span>EduTrack</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#technology">Technology</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+      <li><a href="/index.html" class="btn-nav" id="nav-launch-btn">Launch App →</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ────────────────────────────────── -->
+  <section class="hero" id="hero" aria-label="Hero section">
+    <div class="hero-orb-bottom"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">✦ Built for Educational Institutions</div>
+
+      <h1>
+        The Smarter Way to
+        <span class="highlight">Manage Student Data</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        EduTrack is a powerful, API-first student management platform engineered with Spring Boot and Java. Designed to help universities, colleges, and schools streamline enrollment, track academic records, and empower administrators — all in one place.
+      </p>
+
+      <div class="hero-cta">
+        <a href="/index.html" class="btn-primary" id="hero-get-started-btn">
+          Get Started Free
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#features" class="btn-secondary" id="hero-explore-btn">
+          Explore Features
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <!-- Floating stat cards -->
+      <div class="stat-card stat-card-1">
+        <div class="stat-num">12,400+</div>
+        <div class="stat-label">Students Managed</div>
+      </div>
+
+      <img src="/hero_illustration.png" alt="EduTrack student management dashboard preview showing student records and analytics" />
+
+      <div class="stat-card stat-card-2">
+        <div class="stat-num">99.9%</div>
+        <div class="stat-label">Uptime SLA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── LOGO STRIP ───────────────────────────── -->
+  <div class="logo-strip" aria-label="Trusted institutions">
+    <p class="logo-strip-label">Trusted by forward-thinking institutions</p>
+    <div class="logo-ticker-wrap">
+      <div class="logo-ticker" aria-hidden="true">
+        <span data-icon="🏛️">State University</span>
+        <span data-icon="📚">City College</span>
+        <span data-icon="🎓">Global Institute</span>
+        <span data-icon="🔬">Tech Academy</span>
+        <span data-icon="🏫">Metro School</span>
+        <span data-icon="📖">Arts College</span>
+        <span data-icon="🌐">Digital University</span>
+        <span data-icon="🏛️">West Campus</span>
+        <!-- duplicated for seamless loop -->
+        <span data-icon="🏛️">State University</span>
+        <span data-icon="📚">City College</span>
+        <span data-icon="🎓">Global Institute</span>
+        <span data-icon="🔬">Tech Academy</span>
+        <span data-icon="🏫">Metro School</span>
+        <span data-icon="📖">Arts College</span>
+        <span data-icon="🌐">Digital University</span>
+        <span data-icon="🏛️">West Campus</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FEATURES ─────────────────────────────── -->
+  <section class="features" id="features" aria-labelledby="features-heading">
+    <div class="container">
+      <div class="features-header reveal">
+        <p class="section-label">Platform Features</p>
+        <h2 class="section-title" id="features-heading">Everything Your Institution Needs</h2>
+        <p class="section-desc">A complete, battle-tested toolkit for administrators, registrars, and faculty — built on industry-standard technologies and designed for scale.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal" id="feature-crud">
+          <div class="feature-icon">📋</div>
+          <h3>Full CRUD Operations</h3>
+          <p>Create, read, update, and delete student records with a clean, RESTful API. Every operation is validated, safe, and instantly reflected across the system.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-search">
+          <div class="feature-icon">🔍</div>
+          <h3>Powerful Search &amp; Filter</h3>
+          <p>Find any student instantly by name or email. Advanced query parameters let administrators filter large datasets with precision in milliseconds.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-pagination">
+          <div class="feature-icon">📄</div>
+          <h3>Smart Pagination</h3>
+          <p>Handle thousands of student records effortlessly. Configurable page sizes ensure your dashboards stay fast and responsive no matter the scale.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-validation">
+          <div class="feature-icon">✅</div>
+          <h3>Server-Side Validation</h3>
+          <p>Robust data validation ensures only clean, correct information enters your database. Say goodbye to dirty records and data integrity issues.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-errors">
+          <div class="feature-icon">🛡️</div>
+          <h3>Centralized Error Handling</h3>
+          <p>Graceful, consistent error responses across every endpoint. Your developers and integrators get clear, actionable feedback — no cryptic stack traces.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-security">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure by Design</h3>
+          <p>Database credentials managed through environment variables. Sensitive configuration never touches your codebase, following security best practices from day one.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-layered">
+          <div class="feature-icon">🏗️</div>
+          <h3>Layered Architecture</h3>
+          <p>Clean separation of Controller, Service, and Repository layers makes the system easy to extend, test, and maintain as your institution's needs evolve.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-dto">
+          <div class="feature-icon">🔄</div>
+          <h3>DTO Pattern</h3>
+          <p>Data Transfer Objects decouple your API contract from your database schema, providing flexibility and protecting internal data models from exposure.</p>
+        </div>
+
+        <div class="feature-card reveal" id="feature-ui">
+          <div class="feature-icon">🖥️</div>
+          <h3>Built-in Web UI</h3>
+          <p>A clean, integrated frontend lets non-technical staff manage student records without touching the API — drag, click, done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ─────────────────────────── -->
+  <section class="how-it-works" id="how-it-works" aria-labelledby="how-heading">
+    <div class="container">
+      <div class="how-flex">
+        <div>
+          <div class="reveal">
+            <p class="section-label">How It Works</p>
+            <h2 class="section-title" id="how-heading">Up &amp; Running in Minutes</h2>
+            <p class="section-desc">EduTrack is designed for rapid deployment. No complex configuration, no steep learning curve — just a clean, modern RESTful system that works out of the box.</p>
+          </div>
+
+          <div class="steps-list">
+            <div class="step reveal" id="step-1">
+              <div class="step-num">1</div>
+              <div>
+                <h4>Clone &amp; Configure</h4>
+                <p>Clone the repository and set your MySQL credentials in a simple <code>.env</code> file. No hardcoded secrets, ever.</p>
+              </div>
+            </div>
+            <div class="step reveal" id="step-2">
+              <div class="step-num">2</div>
+              <div>
+                <h4>Build with Maven</h4>
+                <p>Run <code>mvn clean install</code> and let Maven handle all dependencies. The build is reproducible and environment-agnostic.</p>
+              </div>
+            </div>
+            <div class="step reveal" id="step-3">
+              <div class="step-num">3</div>
+              <div>
+                <h4>Launch the Application</h4>
+                <p>Start the server with <code>mvn spring-boot:run</code>. Your API is live at <code>localhost:8080</code> in seconds.</p>
+              </div>
+            </div>
+            <div class="step reveal" id="step-4">
+              <div class="step-num">4</div>
+              <div>
+                <h4>Manage Students Instantly</h4>
+                <p>Open the web UI or connect your frontend client. Create, search, update, and delete records through clean REST endpoints.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Preview -->
+        <div class="api-preview reveal" id="api-preview-box">
+          <div class="api-preview-bar">
+            <span class="api-dot red"></span>
+            <span class="api-dot yel"></span>
+            <span class="api-dot grn"></span>
+            <span class="api-title">EduTrack REST API — Endpoints</span>
+          </div>
+          <div class="api-body">
+            <div><span class="api-tag tag-post">POST</span><span class="endpoint">/students</span></div>
+            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Create a new student record</div>
+            <br/>
+            <div><span class="api-tag tag-get">GET</span><span class="endpoint">/students</span></div>
+            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ List all students (paginated + search)</div>
+            <div style="padding-left:1rem;color:#6a9955;font-size:0.76rem;">  ?page=0&amp;size=10&amp;query=john</div>
+            <br/>
+            <div><span class="api-tag tag-put">PUT</span><span class="endpoint">/students/{id}</span></div>
+            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Update student by ID</div>
+            <br/>
+            <div><span class="api-tag tag-delete">DELETE</span><span class="endpoint">/students/{id}</span></div>
+            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Remove student record by ID</div>
+            <br/>
+            <div style="color:#6a9955;">// ✓ All endpoints validated &amp; error-handled</div>
+            <div style="color:#6a9955;">// ✓ MySQL + Spring Data JPA backend</div>
+            <div style="color:#6a9955;">// ✓ Layered: Controller → Service → Repo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── STATS BAND ────────────────────────────── -->
+  <div class="stats-band" aria-label="Platform statistics">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal" id="stat-students">
+          <div class="num">12K+</div>
+          <div class="label">Students Managed</div>
+          <div class="sublabel">across institutions</div>
+        </div>
+        <div class="stat-item reveal" id="stat-uptime">
+          <div class="num">99.9%</div>
+          <div class="label">Uptime SLA</div>
+          <div class="sublabel">production-grade reliability</div>
+        </div>
+        <div class="stat-item reveal" id="stat-endpoints">
+          <div class="num">4</div>
+          <div class="label">Core API Endpoints</div>
+          <div class="sublabel">clean RESTful design</div>
+        </div>
+        <div class="stat-item reveal" id="stat-speed">
+          <div class="num">&lt;50ms</div>
+          <div class="label">Avg. Response Time</div>
+          <div class="sublabel">optimized JPA queries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TESTIMONIALS ──────────────────────────── -->
+  <section class="testimonials" id="testimonials" aria-labelledby="testimonials-heading">
+    <div class="container">
+      <div class="testimonials-header reveal">
+        <p class="section-label">Testimonials</p>
+        <h2 class="section-title" id="testimonials-heading">What Institutions Are Saying</h2>
+        <p class="section-desc">Administrators and faculty across departments trust EduTrack to keep their student data accurate, accessible, and secure.</p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal" id="testimonial-1">
+          <div class="stars">★★★★★</div>
+          <blockquote>EduTrack transformed how our registrar's office operates. We went from spreadsheets and manual lookups to instant search across 8,000 student records. The pagination alone saved us hours every week.</blockquote>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background: linear-gradient(135deg,#6c63ff,#00d4ff);">SR</div>
+            <div>
+              <div class="reviewer-name">Sarah Rodriguez</div>
+              <div class="reviewer-role">Registrar, State University</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal" id="testimonial-2">
+          <div class="stars">★★★★★</div>
+          <blockquote>The REST API design is clean and very well-structured. Our IT team integrated it with our existing frontend in less than a day. The layered architecture made it trivial to extend for our needs.</blockquote>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background: linear-gradient(135deg,#a855f7,#6c63ff);">AP</div>
+            <div>
+              <div class="reviewer-name">Arjun Patel</div>
+              <div class="reviewer-role">Head of IT, Tech Academy</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal" id="testimonial-3">
+          <div class="stars">★★★★★</div>
+          <blockquote>Finally, a student management system that takes security seriously. Environment-variable credentials, server-side validation, centralized error handling — it's built the right way from the ground up.</blockquote>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background: linear-gradient(135deg,#00d4ff,#6c63ff);">ML</div>
+            <div>
+              <div class="reviewer-name">Dr. Maya Lewis</div>
+              <div class="reviewer-role">Dean of Academics, City College</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TECHNOLOGY ────────────────────────────── -->
+  <section class="tech-stack" id="technology" aria-labelledby="tech-heading">
+    <div class="container">
+      <div class="tech-header reveal">
+        <p class="section-label">Technology Stack</p>
+        <h2 class="section-title" id="tech-heading">Built on Battle-Tested Technologies</h2>
+        <p class="section-desc" style="margin:0 auto;">Enterprise-grade open-source technologies that scale with your institution — no vendor lock-in, no licensing fees.</p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-pill reveal" id="tech-java">
+          <span class="ti">☕</span> Java 17
+        </div>
+        <div class="tech-pill reveal" id="tech-springboot">
+          <span class="ti">🍃</span> Spring Boot
+        </div>
+        <div class="tech-pill reveal" id="tech-mvc">
+          <span class="ti">🌐</span> Spring Web MVC
+        </div>
+        <div class="tech-pill reveal" id="tech-jpa">
+          <span class="ti">🗄️</span> Spring Data JPA
+        </div>
+        <div class="tech-pill reveal" id="tech-hibernate">
+          <span class="ti">🔗</span> Hibernate ORM
+        </div>
+        <div class="tech-pill reveal" id="tech-mysql">
+          <span class="ti">🐬</span> MySQL Database
+        </div>
+        <div class="tech-pill reveal" id="tech-maven">
+          <span class="ti">📦</span> Apache Maven
+        </div>
+        <div class="tech-pill reveal" id="tech-rest">
+          <span class="ti">⚡</span> RESTful API
+        </div>
+        <div class="tech-pill reveal" id="tech-dto">
+          <span class="ti">🔄</span> DTO Pattern
+        </div>
+        <div class="tech-pill reveal" id="tech-di">
+          <span class="ti">💉</span> Dependency Injection
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA BAND ──────────────────────────────── -->
+  <section class="cta-band" id="cta" aria-labelledby="cta-heading">
+    <div class="container">
+      <h2 class="section-title reveal" id="cta-heading">
+        Ready to Modernize Your<br/>
+        <span style="background:var(--grad-btn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Student Management?</span>
+      </h2>
+      <p class="section-desc reveal">
+        Join institutions that have already moved beyond spreadsheets and disconnected tools. EduTrack gives your team the power, speed, and reliability they deserve.
+      </p>
+      <a href="/index.html" class="btn-primary reveal" id="cta-launch-btn">
+        Launch EduTrack Now
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-copy">© 2025 EduTrack · Student Data Management Platform · Built with Spring Boot &amp; Java</p>
+      <ul class="footer-links">
+        <li><a href="/index.html" id="footer-app-link">Launch App</a></li>
+        <li><a href="#features" id="footer-features-link">Features</a></li>
+        <li><a href="#technology" id="footer-tech-link">Technology</a></li>
+        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer" id="footer-github-link">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ─── SCROLL REVEAL JS ──────────────────────── -->
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // stagger siblings in the same parent
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
+          const idx = siblings.indexOf(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, idx * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Navbar scroll effect
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.style.background = window.scrollY > 60
+        ? 'rgba(7,7,19,0.95)'
+        : 'rgba(7,7,19,0.75)';
+    });
+
+    // Counter animation for stats
+    function animateCounter(el, target, suffix = '') {
+      let start = 0;
+      const duration = 1800;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = Math.floor(eased * parseFloat(target));
+        el.textContent = val.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + suffix;
+      };
+      requestAnimationFrame(step);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const els = document.querySelectorAll('.stat-item .num');
+          const targets = ['12K+', '99.9%', '4', '<50ms'];
+          els.forEach((el, i) => { el.textContent = targets[i]; });
+          statsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsBand = document.querySelector('.stats-band');
+    if (statsBand) statsObserver.observe(statsBand);
+  </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>(function(){var t=localStorage.getItem('edu-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +27,32 @@
       --bg:          #f8fafc;
       --white:       #ffffff;
     }
+
+    html[data-theme="dark"] {
+      --bg:         #0f172a;
+      --white:      #1e293b;
+      --text:       #f1f5f9;
+      --muted:      #94a3b8;
+      --border:     #334155;
+      --blue-light: rgba(37,99,235,0.18);
+      --blue-mid:   #93c5fd;
+      --green-light:rgba(22,163,74,0.18);
+      --red-light:  rgba(220,38,38,0.18);
+    }
+
+    .theme-btn {
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      color: var(--text);
+    }
+    .theme-btn:hover { background: var(--blue-light); }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -362,6 +389,7 @@
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#technology">Technology</a></li>
         <li><a href="/login.html" class="btn-nav" id="nav-launch-btn">Launch App →</a></li>
+        <li><button id="themeToggle" class="theme-btn" title="Toggle theme">🌙</button></li>
       </ul>
     </div>
   </nav>
@@ -524,3 +552,18 @@
 
 </body>
 </html>
+
+<script>
+  (function() {
+    var html = document.documentElement;
+    var btn  = document.getElementById('themeToggle');
+    function sync() { btn.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
+    sync();
+    btn.addEventListener('click', function() {
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('edu-theme', next);
+      sync();
+    });
+  })();
+</script>

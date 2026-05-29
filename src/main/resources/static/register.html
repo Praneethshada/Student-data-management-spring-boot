@@ -3,31 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register Institution — EduTrack</title>
-  <meta name="description" content="Register your institution on EduTrack and start managing your student data." />
+  <title>Register — EduTrack</title>
+  <meta name="description" content="Register your institution on EduTrack to start managing student records." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #070713;
-      --card:     #0e0e2a;
-      --border:   rgba(108,99,255,0.22);
-      --primary:  #6c63ff;
-      --accent:   #00d4ff;
-      --accent2:  #a855f7;
-      --grad-btn: linear-gradient(135deg, #6c63ff, #00d4ff);
-      --grad-alt: linear-gradient(135deg, #a855f7, #6c63ff);
-      --text:     #f0f0ff;
-      --muted:    #8888b0;
-      --error:    #ff6b6b;
-      --success:  #00d4a0;
-      --input-bg: rgba(255,255,255,0.04);
+      --blue:       #2563eb;
+      --blue-dark:  #1d4ed8;
+      --blue-light: #eff6ff;
+      --green:      #16a34a;
+      --green-light:#f0fdf4;
+      --red:        #dc2626;
+      --red-light:  #fef2f2;
+      --text:       #1e293b;
+      --muted:      #64748b;
+      --border:     #e2e8f0;
+      --bg:         #f8fafc;
+      --white:      #ffffff;
     }
-
-    html { height: 100%; }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -37,289 +34,208 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: -250px; right: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -200px; left: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(108,99,255,0.1) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
+      justify-content: flex-start;
+      padding: 3rem 1.5rem;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 2.5rem;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
       text-decoration: none;
-      position: relative;
-      z-index: 1;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 1.1rem;
     }
     .brand-icon {
-      width: 40px; height: 40px;
-      background: var(--grad-btn);
-      border-radius: 10px;
+      width: 34px; height: 34px;
+      background: var(--blue);
+      color: white;
+      border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      box-shadow: 0 0 24px rgba(108,99,255,0.5);
-    }
-    .brand-name {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 1.5rem;
-      background: var(--grad-btn);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 1rem;
     }
 
     .card {
       width: 100%;
-      max-width: 440px;
-      background: var(--card);
+      max-width: 420px;
+      background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: 0 20px 80px rgba(108,99,255,0.18);
-      position: relative;
-      z-index: 1;
-      animation: rise 0.5s ease both;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Step badge */
-    .step-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.9rem;
-      border: 1px solid rgba(0,212,255,0.3);
-      border-radius: 50px;
-      font-size: 0.75rem;
+    .card h1 {
+      font-size: 1.4rem;
       font-weight: 700;
-      color: var(--accent);
-      background: rgba(0,212,255,0.07);
-      margin-bottom: 1rem;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .card-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
     }
 
-    .card-header { margin-bottom: 2rem; }
-    .card-header h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.7rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.4rem;
-    }
-    .card-header p { color: var(--muted); font-size: 0.93rem; line-height: 1.6; }
-
-    .form { display: flex; flex-direction: column; gap: 1.1rem; }
+    .form { display: flex; flex-direction: column; gap: 1rem; }
 
     label {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      font-size: 0.88rem;
+      gap: 0.35rem;
+      font-size: 0.87rem;
       font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.3px;
+      color: var(--text);
     }
 
     input {
-      background: var(--input-bg);
+      background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      padding: 0.65rem 0.9rem;
       font: inherit;
-      font-size: 0.97rem;
+      font-size: 0.95rem;
       color: var(--text);
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    input::placeholder { color: rgba(136,136,176,0.6); }
+    input::placeholder { color: #aab; }
     input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(108,99,255,0.18);
-      background: rgba(108,99,255,0.05);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
     }
 
     .hint {
       font-size: 0.78rem;
       color: var(--muted);
-      margin-top: -0.5rem;
-      opacity: 0.8;
+      margin-top: -0.4rem;
     }
 
     .btn-submit {
-      margin-top: 0.5rem;
-      padding: 0.85rem;
-      background: var(--grad-btn);
+      margin-top: 0.4rem;
+      padding: 0.7rem;
+      background: var(--blue);
       border: none;
-      border-radius: 12px;
-      color: #fff;
+      border-radius: 6px;
+      color: white;
       font: inherit;
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 0 28px rgba(108,99,255,0.45);
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      transition: background 0.15s;
     }
-    .btn-submit:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 40px rgba(108,99,255,0.65);
-    }
-    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-submit:hover:not(:disabled) { background: var(--blue-dark); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .btn-submit .spinner {
       display: none;
-      width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #fff;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin: 0 auto;
     }
     .btn-submit.loading .btn-text { display: none; }
-    .btn-submit.loading .spinner  { display: block; }
-
+    .btn-submit.loading .spinner   { display: block; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .alert {
-      padding: 0.75rem 1rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
       font-weight: 500;
       display: none;
-      margin-top: -0.3rem;
     }
-    .alert.show   { display: block; animation: fadeIn 0.2s ease; }
-    .alert.error  { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: var(--error); }
-    .alert.success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); color: var(--success); }
+    .alert.show   { display: block; }
+    .alert.error  { background: var(--red-light); border: 1px solid #fca5a5; color: var(--red); }
+    .alert.success{ background: var(--green-light); border: 1px solid #86efac; color: var(--green); }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin: 1.5rem 0 1.2rem;
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .card-footer {
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-    .card-footer a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .card-footer a:hover { color: #fff; }
-
-    /* Feature blurbs under the form */
-    .perks {
-      margin-top: 2rem;
+    /* Info blurbs */
+    .info-list {
+      margin-top: 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.6rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
     }
-    .perk {
+    .info-item {
       display: flex;
-      align-items: center;
-      gap: 0.7rem;
+      align-items: flex-start;
+      gap: 0.6rem;
       font-size: 0.85rem;
       color: var(--muted);
     }
-    .perk-icon {
-      width: 26px; height: 26px;
-      background: rgba(108,99,255,0.1);
-      border: 1px solid rgba(108,99,255,0.2);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
+    .info-dot {
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
       flex-shrink: 0;
+      margin-top: 6px;
     }
+
+    .divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin: 1.5rem 0 1rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .card-footer { text-align: center; font-size: 0.88rem; color: var(--muted); }
+    .card-footer a { color: var(--blue); font-weight: 600; text-decoration: none; }
+    .card-footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
   <a href="/landing.html" class="brand" id="brand-link">
     <div class="brand-icon">🎓</div>
-    <span class="brand-name">EduTrack</span>
+    EduTrack
   </a>
 
   <div class="card">
-    <div class="card-header">
-      <div class="step-badge">✦ Free • No credit card</div>
-      <h1>Create your account</h1>
-      <p>Register your institution and start managing student data in minutes.</p>
-    </div>
+    <h1>Register Institution</h1>
+    <p class="card-sub">Create an account to start managing your student records.</p>
 
     <form class="form" id="registerForm" novalidate>
       <label for="instName">
         Institution Name
-        <input type="text" id="instName" name="name" placeholder="e.g. State University" autocomplete="organization" required maxlength="120" />
+        <input type="text" id="instName" name="name" placeholder="e.g. City College" autocomplete="organization" required maxlength="120" />
       </label>
 
       <label for="email">
-        Institution Email
-        <input type="email" id="email" name="email" placeholder="admin@university.edu" autocomplete="email" required />
+        Email
+        <input type="email" id="email" name="email" placeholder="admin@example.com" autocomplete="email" required />
       </label>
 
       <label for="password">
         Password
-        <input type="password" id="password" name="password" placeholder="Min. 6 characters" autocomplete="new-password" required minlength="6" />
+        <input type="password" id="password" name="password" placeholder="Minimum 6 characters" autocomplete="new-password" required minlength="6" />
       </label>
-      <p class="hint">Use a strong password. It cannot be recovered.</p>
+      <p class="hint">At least 6 characters. There is no password recovery — keep it safe.</p>
 
       <div class="alert" id="alertMsg" role="alert"></div>
 
       <button type="submit" class="btn-submit" id="submitBtn">
-        <span class="btn-text">Create Account →</span>
+        <span class="btn-text">Create Account</span>
         <span class="spinner"></span>
       </button>
     </form>
 
-    <div class="perks">
-      <div class="perk"><div class="perk-icon">🔒</div>Your data is private and isolated from other institutions</div>
-      <div class="perk"><div class="perk-icon">⚡</div>Instant access — no approval or verification required</div>
-      <div class="perk"><div class="perk-icon">🗄️</div>Full CRUD, search, and pagination from day one</div>
+    <div class="info-list">
+      <div class="info-item"><span class="info-dot"></span>Your student data is private and not shared with other institutions.</div>
+      <div class="info-item"><span class="info-dot"></span>No verification email — access is immediate after registration.</div>
+      <div class="info-item"><span class="info-dot"></span>You can start adding student records right after logging in.</div>
     </div>
 
-    <div class="divider">Already registered?</div>
+    <div class="divider">Already have an account?</div>
 
     <div class="card-footer">
-      <a href="/login.html" id="login-link">← Sign in to your account</a>
+      <a href="/login.html" id="login-link">← Sign in</a>
     </div>
   </div>
 
@@ -332,9 +248,7 @@
       alertMsg.textContent = msg;
       alertMsg.className = 'alert ' + type + ' show';
     }
-    function hideAlert() {
-      alertMsg.className = 'alert';
-    }
+    function hideAlert() { alertMsg.className = 'alert'; }
     function setLoading(on) {
       btn.disabled = on;
       btn.classList.toggle('loading', on);
@@ -348,15 +262,10 @@
       const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      if (!name || !email || !password) {
-        showAlert('Please fill in all fields.', 'error'); return;
-      }
-      if (password.length < 6) {
-        showAlert('Password must be at least 6 characters.', 'error'); return;
-      }
+      if (!name || !email || !password) { showAlert('Please fill in all fields.', 'error'); return; }
+      if (password.length < 6) { showAlert('Password must be at least 6 characters.', 'error'); return; }
 
       setLoading(true);
-
       try {
         const res = await fetch('/auth/register', {
           method: 'POST',
@@ -367,10 +276,9 @@
         const body = await res.json().catch(() => ({}));
 
         if (res.ok) {
-          showAlert('🎉 Account created! Redirecting to login…', 'success');
-          setTimeout(() => { window.location.href = '/login.html'; }, 1800);
+          showAlert('Account created! Redirecting to login...', 'success');
+          setTimeout(() => { window.location.href = '/login.html'; }, 1500);
         } else {
-          // Show field-level validation errors or top-level error
           if (body.error) {
             showAlert(body.error, 'error');
           } else {
@@ -378,7 +286,7 @@
             showAlert(msgs || 'Registration failed. Please check your inputs.', 'error');
           }
         }
-      } catch (err) {
+      } catch {
         showAlert('Network error. Please try again.', 'error');
       } finally {
         setLoading(false);

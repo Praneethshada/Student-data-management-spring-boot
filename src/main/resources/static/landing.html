@@ -3,1152 +3,524 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduTrack – Smart Student Management for Modern Institutions</title>
-  <meta name="description" content="EduTrack is the all-in-one student data management platform built for universities, colleges, and schools. Streamline enrollment, track academics, and empower administrators with powerful RESTful tools." />
-  <meta property="og:title" content="EduTrack – Smart Student Management for Modern Institutions" />
-  <meta property="og:description" content="Streamline enrollment, track academics, and empower administrators with the most capable student management platform." />
+  <title>EduTrack — Student Management System</title>
+  <meta name="description" content="A Spring Boot student management system with institution-level login and isolated data per institution." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-dark:       #070713;
-      --bg-card:       #0e0e2a;
-      --bg-card2:      #12122e;
-      --primary:       #6c63ff;
-      --primary-light: #8b85ff;
-      --accent:        #00d4ff;
-      --accent2:       #a855f7;
-      --text-primary:  #f0f0ff;
-      --text-muted:    #8888b0;
-      --border:        rgba(108,99,255,0.22);
-      --border-glow:   rgba(0,212,255,0.35);
-      --grad-hero:     linear-gradient(135deg, #070713 0%, #0e0830 50%, #070713 100%);
-      --grad-btn:      linear-gradient(135deg, #6c63ff, #00d4ff);
-      --grad-accent:   linear-gradient(135deg, #6c63ff, #a855f7);
-      --shadow-card:   0 8px 40px rgba(108,99,255,0.14);
-      --shadow-glow:   0 0 60px rgba(108,99,255,0.22);
+      --blue:        #2563eb;
+      --blue-dark:   #1d4ed8;
+      --blue-light:  #eff6ff;
+      --blue-mid:    #bfdbfe;
+      --green:       #16a34a;
+      --green-light: #f0fdf4;
+      --red:         #dc2626;
+      --red-light:   #fef2f2;
+      --text:        #1e293b;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --bg:          #f8fafc;
+      --white:       #ffffff;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-primary);
-      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.6;
     }
 
-    /* ─── NOISE OVERLAY ─────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.5;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    /* ─── NAVBAR ────────────────────────────── */
+    /* ── NAVBAR ────────────────────────────── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
       z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 6%;
-      background: rgba(7,7,19,0.75);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s;
+      gap: 1rem;
     }
-
     .nav-logo {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-    }
-
-    .nav-logo .logo-icon {
-      width: 38px; height: 38px;
-      background: var(--grad-btn);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 0 20px rgba(108,99,255,0.45);
-    }
-
-    .nav-logo span {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 1.45rem;
-      letter-spacing: -0.5px;
-      background: var(--grad-btn);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.25s;
-    }
-
-    .nav-links a:hover { color: var(--text-primary); }
-
-    .btn-nav {
-      padding: 0.55rem 1.4rem;
-      border-radius: 50px;
-      background: var(--grad-btn);
-      color: #fff !important;
-      font-weight: 600;
-      font-size: 0.92rem;
-      box-shadow: 0 0 20px rgba(108,99,255,0.4);
-      transition: transform 0.2s, box-shadow 0.2s !important;
-    }
-
-    .btn-nav:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 35px rgba(108,99,255,0.6) !important;
-      color: #fff;
-    }
-
-    /* ─── HERO ──────────────────────────────── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 8rem 6% 5rem;
-      overflow: hidden;
-      background: var(--grad-hero);
-    }
-
-    /* Glowing orbs */
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: -200px; right: -200px;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .hero-orb-bottom {
-      position: absolute;
-      bottom: -180px; left: -180px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 620px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
       gap: 0.5rem;
-      padding: 0.4rem 1rem;
-      border: 1px solid var(--border-glow);
-      border-radius: 50px;
-      font-size: 0.8rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--blue);
+    }
+    .nav-logo span.logo-icon {
+      width: 32px; height: 32px;
+      background: var(--blue);
+      color: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn-nav {
+      background: var(--blue);
+      color: white !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.88rem !important;
+      font-weight: 600 !important;
+      transition: background 0.15s !important;
+    }
+    .btn-nav:hover { background: var(--blue-dark) !important; }
+
+    /* ── HERO ───────────────────────────────── */
+    .hero {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .hero-label {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 0.78rem;
       font-weight: 600;
-      color: var(--accent);
-      background: rgba(0,212,255,0.07);
-      margin-bottom: 1.8rem;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      animation: fadeSlideDown 0.7s ease both;
-    }
-
-    .hero-badge::before {
-      content: '●';
-      font-size: 0.55rem;
-      color: var(--accent);
-      animation: pulse 2s infinite;
-    }
-
-    h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2.6rem, 5.5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
-      margin-bottom: 1.5rem;
-      animation: fadeSlideDown 0.8s 0.1s ease both;
-    }
-
-    h1 .highlight {
-      background: var(--grad-btn);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: block;
-    }
-
-    .hero-subtitle {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 520px;
-      margin-bottom: 2.5rem;
-      line-height: 1.75;
-      animation: fadeSlideDown 0.8s 0.2s ease both;
-    }
-
-    .hero-cta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      animation: fadeSlideDown 0.8s 0.3s ease both;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.85rem 2rem;
-      background: var(--grad-btn);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 0 30px rgba(108,99,255,0.5);
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 40px rgba(108,99,255,0.7);
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.85rem 1.8rem;
-      border: 1.5px solid var(--border);
-      border-radius: 50px;
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 1rem;
-      text-decoration: none;
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
-      transition: border-color 0.25s, background 0.25s, transform 0.25s;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--primary-light);
-      background: rgba(108,99,255,0.1);
-      transform: translateY(-2px);
-    }
-
-    .hero-image-wrap {
-      position: absolute;
-      right: 4%;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      width: 48%;
-      max-width: 680px;
-      animation: floatUp 1s 0.4s ease both;
-    }
-
-    .hero-image-wrap img {
-      width: 100%;
-      border-radius: 24px;
-      box-shadow: 0 30px 100px rgba(108,99,255,0.35);
-      border: 1px solid var(--border);
-    }
-
-    /* Floating stat cards */
-    .stat-card {
-      position: absolute;
-      background: rgba(14,14,42,0.9);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 0.9rem 1.2rem;
-      backdrop-filter: blur(14px);
-      box-shadow: var(--shadow-card);
-      animation: floatCard 4s ease-in-out infinite;
-    }
-
-    .stat-card .stat-num {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 1.5rem;
-      background: var(--grad-btn);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .stat-card .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .stat-card-1 { top: 16%; left: -5%; animation-delay: 0s; }
-    .stat-card-2 { bottom: 18%; right: -4%; animation-delay: 1.5s; }
-
-    /* ─── LOGO STRIP ─────────────────────────── */
-    .logo-strip {
-      padding: 2.5rem 0;
-      background: rgba(14,14,42,0.6);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .logo-strip-label {
-      text-align: center;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .logo-ticker-wrap {
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .logo-ticker {
-      display: inline-flex;
-      gap: 3.5rem;
-      animation: ticker 25s linear infinite;
-    }
-
-    .logo-ticker span {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text-muted);
-      letter-spacing: -0.3px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      white-space: nowrap;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-    }
-
-    .logo-ticker span:hover { opacity: 1; }
-    .logo-ticker span::before { content: attr(data-icon); font-size: 1.1rem; }
-
-    /* ─── SECTION COMMONS ────────────────────── */
-    section { position: relative; z-index: 1; }
-
-    .section-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2rem, 3.5vw, 2.8rem);
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1.15;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
       margin-bottom: 1.2rem;
     }
-
-    .section-desc {
-      color: var(--text-muted);
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      max-width: 640px;
+      margin: 0 auto 1rem;
+      line-height: 1.2;
+    }
+    .hero h1 span { color: var(--blue); }
+    .hero p {
       font-size: 1.05rem;
-      max-width: 580px;
-      line-height: 1.75;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2rem;
     }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 6%;
-    }
-
-    /* ─── FEATURES ──────────────────────────── */
-    .features {
-      padding: 6rem 0;
-      background: var(--bg-dark);
-    }
-
-    .features-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-
-    .features-header .section-desc { margin: 0 auto; }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--grad-accent);
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 0;
-    }
-
-    .feature-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: var(--shadow-glow); }
-    .feature-card:hover::before { opacity: 0.04; }
-
-    .feature-icon {
-      width: 52px; height: 52px;
-      border-radius: 14px;
-      background: rgba(108,99,255,0.12);
-      border: 1px solid rgba(108,99,255,0.25);
+    .hero-cta {
       display: flex;
-      align-items: center;
+      gap: 0.8rem;
       justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1.3rem;
-      position: relative;
-      z-index: 1;
-      transition: background 0.3s, box-shadow 0.3s;
+      flex-wrap: wrap;
     }
-
-    .feature-card:hover .feature-icon {
-      background: rgba(108,99,255,0.2);
-      box-shadow: 0 0 20px rgba(108,99,255,0.35);
-    }
-
-    .feature-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.15rem;
-      margin-bottom: 0.7rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .feature-card p {
-      color: var(--text-muted);
-      font-size: 0.93rem;
-      line-height: 1.7;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ─── HOW IT WORKS ──────────────────────── */
-    .how-it-works {
-      padding: 6rem 0;
-      background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 50%, var(--bg-dark) 100%);
-    }
-
-    .how-flex {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: center;
-    }
-
-    .steps-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 2.5rem; }
-
-    .step {
-      display: flex;
-      gap: 1.3rem;
-      align-items: flex-start;
-      padding: 1.5rem;
-      border-radius: 16px;
-      border: 1px solid transparent;
-      transition: border-color 0.3s, background 0.3s;
-      cursor: default;
-    }
-
-    .step:hover {
-      border-color: var(--border);
-      background: rgba(108,99,255,0.06);
-    }
-
-    .step-num {
-      width: 42px; height: 42px;
-      flex-shrink: 0;
-      background: var(--grad-btn);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      box-shadow: 0 0 20px rgba(108,99,255,0.4);
-    }
-
-    .step h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .step p { color: var(--text-muted); font-size: 0.91rem; line-height: 1.65; }
-
-    /* API preview box */
-    .api-preview {
-      background: #090920;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: var(--shadow-glow);
-    }
-
-    .api-preview-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.9rem 1.4rem;
-      background: rgba(108,99,255,0.08);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .api-dot { width: 11px; height: 11px; border-radius: 50%; }
-    .api-dot.red   { background: #ff5f57; }
-    .api-dot.yel   { background: #ffbd2e; }
-    .api-dot.grn   { background: #28c840; }
-
-    .api-title { margin-left: 0.6rem; font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
-
-    .api-body { padding: 1.5rem; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 2; }
-    .api-body .method-get    { color: #4ec9b0; font-weight: 700; }
-    .api-body .method-post   { color: #dcdcaa; font-weight: 700; }
-    .api-body .method-put    { color: #ce9178; font-weight: 700; }
-    .api-body .method-delete { color: #f48771; font-weight: 700; }
-    .api-body .endpoint      { color: var(--accent); }
-    .api-body .comment       { color: #6a9955; }
-    .api-body .status        { color: #b5cea8; font-size: 0.78rem; }
-
-    .api-tag {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      padding: 0.7rem 1.6rem;
       border-radius: 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      margin-right: 0.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: inline-block;
     }
-
-    .tag-get    { background: rgba(78,201,176,0.15); color: #4ec9b0; }
-    .tag-post   { background: rgba(220,220,170,0.15); color: #dcdcaa; }
-    .tag-put    { background: rgba(206,145,120,0.15); color: #ce9178; }
-    .tag-delete { background: rgba(244,135,113,0.15); color: #f48771; }
-
-    /* ─── STATS BAND ────────────────────────── */
-    .stats-band {
-      padding: 5rem 0;
-      background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(0,212,255,0.06) 100%);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    .btn-primary:hover { background: var(--blue-dark); }
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      padding: 0.7rem 1.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1.5px solid var(--blue);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      display: inline-block;
     }
+    .btn-outline:hover { background: var(--blue-light); }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      text-align: center;
+    /* ── SECTION BASE ──────────────────────── */
+    .section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
     }
-
-    .stat-item .num {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 900;
-      font-size: 3rem;
-      background: var(--grad-btn);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1;
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--blue);
       margin-bottom: 0.5rem;
     }
-
-    .stat-item .label {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .stat-item .sublabel {
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      opacity: 0.7;
-      margin-top: 0.2rem;
-    }
-
-    /* ─── TESTIMONIALS ──────────────────────── */
-    .testimonials {
-      padding: 6rem 0;
-      background: var(--bg-dark);
-    }
-
-    .testimonials-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-
-    .testimonials-header .section-desc { margin: 0 auto; }
-
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .testimonial-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: transform 0.3s, border-color 0.3s;
-      position: relative;
-    }
-
-    .testimonial-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(108,99,255,0.4);
-    }
-
-    .stars { color: #f5a623; font-size: 1rem; margin-bottom: 1.1rem; letter-spacing: 2px; }
-
-    .testimonial-card blockquote {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.75;
-      margin-bottom: 1.5rem;
-      font-style: italic;
-    }
-
-    .testimonial-card blockquote::before {
-      content: '"';
-      font-size: 2.5rem;
-      color: var(--primary);
-      font-family: 'Outfit', sans-serif;
-      line-height: 0.5;
-      vertical-align: -0.6rem;
-      margin-right: 0.15rem;
-      font-style: normal;
-    }
-
-    .reviewer {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-
-    .reviewer-avatar {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
       font-weight: 700;
-      font-size: 1rem;
-      color: #fff;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.97rem;
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── FEATURES ──────────────────────────── */
+    .features-bg { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem 1.5rem;
+    }
+    .feature-icon {
+      width: 38px; height: 38px;
+      background: var(--blue-light);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      margin-bottom: 0.9rem;
+    }
+    .feature-card h3 {
+      font-size: 0.97rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── HOW IT WORKS ──────────────────────── */
+    .how-bg { background: var(--white); border-bottom: 1px solid var(--border); }
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 680px) { .how-grid { grid-template-columns: 1fr; } }
+    .steps { display: flex; flex-direction: column; gap: 1.4rem; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      background: var(--blue);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      margin-top: 2px;
     }
+    .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .step p  { font-size: 0.88rem; color: var(--muted); }
 
-    .reviewer-name { font-weight: 700; font-size: 0.92rem; }
-    .reviewer-role { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.15rem; }
-
-    /* ─── TECH STACK ─────────────────────────── */
-    .tech-stack {
-      padding: 5rem 0;
-      background: var(--bg-card);
-      border-top: 1px solid var(--border);
+    /* API box */
+    .api-box {
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
     }
+    .api-bar {
+      background: #334155;
+      padding: 0.6rem 1rem;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #f87171; }
+    .dot-y { background: #fbbf24; }
+    .dot-g { background: #34d399; }
+    .api-body { padding: 1.2rem 1.2rem; font-size: 0.82rem; line-height: 2; }
+    .method { display: inline-block; width: 58px; font-weight: 700; font-size: 0.75rem; border-radius: 4px; text-align: center; padding: 1px 0; margin-right: 0.5rem; }
+    .m-get    { background: #166534; color: #bbf7d0; }
+    .m-post   { background: #1e3a5f; color: #bfdbfe; }
+    .m-put    { background: #78350f; color: #fde68a; }
+    .m-delete { background: #7f1d1d; color: #fecaca; }
+    .ep { color: #e2e8f0; }
+    .ep-desc { color: #64748b; font-size: 0.75rem; margin-left: 0.4rem; }
 
-    .tech-header { text-align: center; margin-bottom: 3rem; }
+    /* ── TECH STACK ────────────────────────── */
+    .tech-bg { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .tech-grid {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
+      gap: 0.7rem;
     }
-
     .tech-pill {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
-      padding: 0.65rem 1.3rem;
-      background: rgba(108,99,255,0.09);
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
     }
+    .tech-pill span { font-size: 1rem; }
 
-    .tech-pill:hover {
-      border-color: var(--primary);
-      background: rgba(108,99,255,0.18);
-      transform: translateY(-2px);
-    }
-
-    .tech-pill .ti { font-size: 1.15rem; }
-
-    /* ─── CTA BAND ───────────────────────────── */
+    /* ── CTA BAND ──────────────────────────── */
     .cta-band {
-      padding: 7rem 0;
-      background: var(--bg-dark);
+      background: var(--blue);
+      padding: 3.5rem 1.5rem;
       text-align: center;
-      position: relative;
-      overflow: hidden;
     }
-
-    .cta-band::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px; height: 400px;
-      background: radial-gradient(ellipse, rgba(108,99,255,0.2) 0%, transparent 70%);
-      pointer-events: none;
+    .cta-band h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.7rem;
     }
-
-    .cta-band .section-title {
-      position: relative;
-      z-index: 1;
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin-bottom: 1.2rem;
+    .cta-band p {
+      color: var(--blue-mid);
+      font-size: 0.97rem;
+      margin-bottom: 1.8rem;
     }
-
-    .cta-band .section-desc {
-      position: relative;
-      z-index: 1;
-      margin: 0 auto 2.5rem;
-      max-width: 540px;
+    .btn-white {
+      background: white;
+      color: var(--blue);
+      padding: 0.7rem 1.8rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-block;
+      transition: background 0.15s;
     }
+    .btn-white:hover { background: var(--blue-light); }
 
-    .cta-band .btn-primary {
-      position: relative;
-      z-index: 1;
-      font-size: 1.05rem;
-      padding: 1rem 2.4rem;
-    }
-
-    /* ─── FOOTER ─────────────────────────────── */
+    /* ── FOOTER ────────────────────────────── */
     footer {
-      background: #04040f;
+      background: var(--white);
       border-top: 1px solid var(--border);
-      padding: 3rem 6%;
+      padding: 1.5rem;
+      text-align: center;
     }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .footer-copy {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-    }
-
+    footer p { font-size: 0.85rem; color: var(--muted); }
     .footer-links {
-      display: flex;
-      gap: 1.8rem;
       list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.6rem;
     }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--text-primary); }
-
-    /* ─── ANIMATIONS ─────────────────────────── */
-    @keyframes fadeSlideDown {
-      from { opacity: 0; transform: translateY(-22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes floatUp {
-      from { opacity: 0; transform: translateY(60px) translateY(-50%); }
-      to   { opacity: 1; transform: translateY(-50%); }
-    }
-
-    @keyframes floatCard {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* Scroll reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── RESPONSIVE ─────────────────────────── */
-    @media (max-width: 960px) {
-      .hero { padding-bottom: 20rem; }
-      .hero-image-wrap { position: relative; right: auto; top: auto; transform: none; width: 100%; max-width: 100%; margin-top: 3rem; animation: none; }
-      .hero { flex-direction: column; align-items: flex-start; }
-      .how-flex { grid-template-columns: 1fr; gap: 3rem; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 640px) {
-      .nav-links { display: none; }
-      h1 { font-size: 2.3rem; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .hero { padding-bottom: 4rem; }
-      .hero-image-wrap { display: none; }
-      .stat-card { display: none; }
-    }
+    .footer-links a { font-size: 0.85rem; color: var(--muted); transition: color 0.15s; }
+    .footer-links a:hover { color: var(--blue); }
   </style>
 </head>
 <body>
 
-  <!-- ─── NAVBAR ─────────────────────────────── -->
-  <nav id="navbar">
-    <a href="#" class="nav-logo" aria-label="EduTrack Home">
-      <div class="logo-icon">🎓</div>
-      <span>EduTrack</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#technology">Technology</a></li>
-      <li><a href="/login.html" class="btn-nav" id="nav-launch-btn">Launch App →</a></li>
-    </ul>
-  </nav>
-
-  <!-- ─── HERO ────────────────────────────────── -->
-  <section class="hero" id="hero" aria-label="Hero section">
-    <div class="hero-orb-bottom"></div>
-
-    <div class="hero-content">
-      <div class="hero-badge">✦ Built for Educational Institutions</div>
-
-      <h1>
-        The Smarter Way to
-        <span class="highlight">Manage Student Data</span>
-      </h1>
-
-      <p class="hero-subtitle">
-        EduTrack is a powerful, API-first student management platform engineered with Spring Boot and Java. Designed to help universities, colleges, and schools streamline enrollment, track academic records, and empower administrators — all in one place.
-      </p>
-
-      <div class="hero-cta">
-        <a href="/login.html" class="btn-primary" id="hero-get-started-btn">
-          Get Started Free
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="#features" class="btn-secondary" id="hero-explore-btn">
-          Explore Features
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-image-wrap">
-      <img src="/hero_illustration.png" alt="EduTrack student management dashboard" />
-    </div>
-  </section>
-
-  <!-- ─── FEATURES ─────────────────────────────── -->
-  <section class="features" id="features" aria-labelledby="features-heading">
-    <div class="container">
-      <div class="features-header reveal">
-        <p class="section-label">Platform Features</p>
-        <h2 class="section-title" id="features-heading">Everything Your Institution Needs</h2>
-        <p class="section-desc">A complete, battle-tested toolkit for administrators, registrars, and faculty — built on industry-standard technologies and designed for scale.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card reveal" id="feature-crud">
-          <div class="feature-icon">📋</div>
-          <h3>Full CRUD Operations</h3>
-          <p>Create, read, update, and delete student records with a clean, RESTful API. Every operation is validated, safe, and instantly reflected across the system.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-search">
-          <div class="feature-icon">🔍</div>
-          <h3>Powerful Search &amp; Filter</h3>
-          <p>Find any student instantly by name or email. Advanced query parameters let administrators filter large datasets with precision in milliseconds.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-pagination">
-          <div class="feature-icon">📄</div>
-          <h3>Smart Pagination</h3>
-          <p>Handle thousands of student records effortlessly. Configurable page sizes ensure your dashboards stay fast and responsive no matter the scale.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-validation">
-          <div class="feature-icon">✅</div>
-          <h3>Server-Side Validation</h3>
-          <p>Robust data validation ensures only clean, correct information enters your database. Say goodbye to dirty records and data integrity issues.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-errors">
-          <div class="feature-icon">🛡️</div>
-          <h3>Centralized Error Handling</h3>
-          <p>Graceful, consistent error responses across every endpoint. Your developers and integrators get clear, actionable feedback — no cryptic stack traces.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-security">
-          <div class="feature-icon">🔒</div>
-          <h3>Secure by Design</h3>
-          <p>Database credentials managed through environment variables. Sensitive configuration never touches your codebase, following security best practices from day one.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-layered">
-          <div class="feature-icon">🏗️</div>
-          <h3>Layered Architecture</h3>
-          <p>Clean separation of Controller, Service, and Repository layers makes the system easy to extend, test, and maintain as your institution's needs evolve.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-dto">
-          <div class="feature-icon">🔄</div>
-          <h3>DTO Pattern</h3>
-          <p>Data Transfer Objects decouple your API contract from your database schema, providing flexibility and protecting internal data models from exposure.</p>
-        </div>
-
-        <div class="feature-card reveal" id="feature-ui">
-          <div class="feature-icon">🖥️</div>
-          <h3>Built-in Web UI</h3>
-          <p>A clean, integrated frontend lets non-technical staff manage student records without touching the API — drag, click, done.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── HOW IT WORKS ─────────────────────────── -->
-  <section class="how-it-works" id="how-it-works" aria-labelledby="how-heading">
-    <div class="container">
-      <div class="how-flex">
-        <div>
-          <div class="reveal">
-            <p class="section-label">How It Works</p>
-            <h2 class="section-title" id="how-heading">Up &amp; Running in Minutes</h2>
-            <p class="section-desc">EduTrack is designed for rapid deployment. No complex configuration, no steep learning curve — just a clean, modern RESTful system that works out of the box.</p>
-          </div>
-
-          <div class="steps-list">
-            <div class="step reveal" id="step-1">
-              <div class="step-num">1</div>
-              <div>
-                <h4>Clone &amp; Configure</h4>
-                <p>Clone the repository and set your MySQL credentials in a simple <code>.env</code> file. No hardcoded secrets, ever.</p>
-              </div>
-            </div>
-            <div class="step reveal" id="step-2">
-              <div class="step-num">2</div>
-              <div>
-                <h4>Build with Maven</h4>
-                <p>Run <code>mvn clean install</code> and let Maven handle all dependencies. The build is reproducible and environment-agnostic.</p>
-              </div>
-            </div>
-            <div class="step reveal" id="step-3">
-              <div class="step-num">3</div>
-              <div>
-                <h4>Launch the Application</h4>
-                <p>Start the server with <code>mvn spring-boot:run</code>. Your API is live at <code>localhost:8080</code> in seconds.</p>
-              </div>
-            </div>
-            <div class="step reveal" id="step-4">
-              <div class="step-num">4</div>
-              <div>
-                <h4>Manage Students Instantly</h4>
-                <p>Open the web UI or connect your frontend client. Create, search, update, and delete records through clean REST endpoints.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- API Preview -->
-        <div class="api-preview reveal" id="api-preview-box">
-          <div class="api-preview-bar">
-            <span class="api-dot red"></span>
-            <span class="api-dot yel"></span>
-            <span class="api-dot grn"></span>
-            <span class="api-title">EduTrack REST API — Endpoints</span>
-          </div>
-          <div class="api-body">
-            <div><span class="api-tag tag-post">POST</span><span class="endpoint">/students</span></div>
-            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Create a new student record</div>
-            <br/>
-            <div><span class="api-tag tag-get">GET</span><span class="endpoint">/students</span></div>
-            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ List all students (paginated + search)</div>
-            <div style="padding-left:1rem;color:#6a9955;font-size:0.76rem;">  ?page=0&amp;size=10&amp;query=john</div>
-            <br/>
-            <div><span class="api-tag tag-put">PUT</span><span class="endpoint">/students/{id}</span></div>
-            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Update student by ID</div>
-            <br/>
-            <div><span class="api-tag tag-delete">DELETE</span><span class="endpoint">/students/{id}</span></div>
-            <div style="padding-left:1rem;color:var(--text-muted);font-size:0.78rem;">→ Remove student record by ID</div>
-            <br/>
-            <div style="color:#6a9955;">// ✓ All endpoints validated &amp; error-handled</div>
-            <div style="color:#6a9955;">// ✓ MySQL + Spring Data JPA backend</div>
-            <div style="color:#6a9955;">// ✓ Layered: Controller → Service → Repo</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── TECHNOLOGY ────────────────────────────── -->
-  <section class="tech-stack" id="technology" aria-labelledby="tech-heading">
-    <div class="container">
-      <div class="tech-header reveal">
-        <p class="section-label">Technology Stack</p>
-        <h2 class="section-title" id="tech-heading">Built on Battle-Tested Technologies</h2>
-        <p class="section-desc" style="margin:0 auto;">Enterprise-grade open-source technologies that scale with your institution — no vendor lock-in, no licensing fees.</p>
-      </div>
-
-      <div class="tech-grid">
-        <div class="tech-pill reveal" id="tech-java">
-          <span class="ti">☕</span> Java 17
-        </div>
-        <div class="tech-pill reveal" id="tech-springboot">
-          <span class="ti">🍃</span> Spring Boot
-        </div>
-        <div class="tech-pill reveal" id="tech-mvc">
-          <span class="ti">🌐</span> Spring Web MVC
-        </div>
-        <div class="tech-pill reveal" id="tech-jpa">
-          <span class="ti">🗄️</span> Spring Data JPA
-        </div>
-        <div class="tech-pill reveal" id="tech-hibernate">
-          <span class="ti">🔗</span> Hibernate ORM
-        </div>
-        <div class="tech-pill reveal" id="tech-mysql">
-          <span class="ti">🐬</span> MySQL Database
-        </div>
-        <div class="tech-pill reveal" id="tech-maven">
-          <span class="ti">📦</span> Apache Maven
-        </div>
-        <div class="tech-pill reveal" id="tech-rest">
-          <span class="ti">⚡</span> RESTful API
-        </div>
-        <div class="tech-pill reveal" id="tech-dto">
-          <span class="ti">🔄</span> DTO Pattern
-        </div>
-        <div class="tech-pill reveal" id="tech-di">
-          <span class="ti">💉</span> Dependency Injection
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── CTA BAND ──────────────────────────────── -->
-  <section class="cta-band" id="cta" aria-labelledby="cta-heading">
-    <div class="container">
-      <h2 class="section-title reveal" id="cta-heading">
-        Ready to Modernize Your<br/>
-        <span style="background:var(--grad-btn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Student Management?</span>
-      </h2>
-      <p class="section-desc reveal">
-        A clean, API-first system for managing student records — register your institution, log in, and start managing data immediately.
-      </p>
-      <a href="/login.html" class="btn-primary reveal" id="cta-launch-btn">
-        Launch EduTrack Now
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">🎓</span>
+        EduTrack
       </a>
-    </div>
-  </section>
-
-  <!-- ─── FOOTER ────────────────────────────────── -->
-  <footer>
-    <div class="footer-inner">
-      <p class="footer-copy">© 2025 EduTrack · Student Data Management Platform · Built with Spring Boot &amp; Java</p>
-      <ul class="footer-links">
-        <li><a href="/login.html" id="footer-app-link">Launch App</a></li>
-        <li><a href="#features" id="footer-features-link">Features</a></li>
-        <li><a href="#technology" id="footer-tech-link">Technology</a></li>
-        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer" id="footer-github-link">GitHub</a></li>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#technology">Technology</a></li>
+        <li><a href="/login.html" class="btn-nav" id="nav-launch-btn">Launch App →</a></li>
       </ul>
     </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-label">Spring Boot Project</div>
+    <h1>A Simple Way to <span>Manage Student Records</span></h1>
+    <p>
+      EduTrack is a student management system built with Java and Spring Boot.
+      Each institution registers separately and manages its own student data — nothing is shared between institutions.
+    </p>
+    <div class="hero-cta">
+      <a href="/register.html" class="btn-primary" id="hero-register-btn">Get Started</a>
+      <a href="#features" class="btn-outline" id="hero-features-btn">See Features</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="features-bg" id="features">
+    <div class="section">
+      <p class="section-label">What It Does</p>
+      <h2 class="section-title">Features</h2>
+      <p class="section-desc">A straightforward set of features for managing students at your institution.</p>
+
+      <div class="features-grid">
+        <div class="feature-card" id="feature-auth">
+          <div class="feature-icon">🔐</div>
+          <h3>Institution Login</h3>
+          <p>Each institution registers with an email and password. Passwords are stored as BCrypt hashes. Login sets a session cookie that lasts 7 days.</p>
+        </div>
+        <div class="feature-card" id="feature-isolation">
+          <div class="feature-icon">🏛️</div>
+          <h3>Data Isolation</h3>
+          <p>Every student record is linked to the institution that created it. You cannot see or edit another institution's data — enforced at the database query level.</p>
+        </div>
+        <div class="feature-card" id="feature-crud">
+          <div class="feature-icon">📋</div>
+          <h3>CRUD Operations</h3>
+          <p>Create, read, update, and delete student records. Each student has a name, email, and course. All inputs are validated before saving.</p>
+        </div>
+        <div class="feature-card" id="feature-search">
+          <div class="feature-icon">🔍</div>
+          <h3>Search</h3>
+          <p>Search students by name or email. Results are filtered within your institution's data only.</p>
+        </div>
+        <div class="feature-card" id="feature-pagination">
+          <div class="feature-icon">📄</div>
+          <h3>Pagination</h3>
+          <p>Student lists are paginated. You can set the page size and navigate through pages from the UI or the API.</p>
+        </div>
+        <div class="feature-card" id="feature-ui">
+          <div class="feature-icon">🖥️</div>
+          <h3>Browser UI</h3>
+          <p>A simple HTML interface lets you manage records without using Postman or curl. The UI handles login, session expiry, and error messages.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-bg" id="how-it-works">
+    <div class="section">
+      <p class="section-label">How It Works</p>
+      <h2 class="section-title">Getting Started</h2>
+      <p class="section-desc">Four steps from zero to managing your student records.</p>
+
+      <div class="how-grid">
+        <div class="steps">
+          <div class="step" id="step-1">
+            <div class="step-num">1</div>
+            <div>
+              <h4>Register your institution</h4>
+              <p>Create an account with your institution name, email, and a password. No verification needed — access is immediate.</p>
+            </div>
+          </div>
+          <div class="step" id="step-2">
+            <div class="step-num">2</div>
+            <div>
+              <h4>Log in</h4>
+              <p>Sign in with your credentials. The system sets a session cookie that keeps you logged in for 7 days.</p>
+            </div>
+          </div>
+          <div class="step" id="step-3">
+            <div class="step-num">3</div>
+            <div>
+              <h4>Add student records</h4>
+              <p>Use the browser UI or call the REST API directly to create, search, update, and delete students.</p>
+            </div>
+          </div>
+          <div class="step" id="step-4">
+            <div class="step-num">4</div>
+            <div>
+              <h4>Your data stays yours</h4>
+              <p>All student records you create are only visible to your institution. Other institutions cannot access them.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="api-box" id="api-preview-box">
+          <div class="api-bar">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+            &nbsp;REST API Endpoints
+          </div>
+          <div class="api-body">
+            <div><span class="method m-post">POST</span><span class="ep">/auth/register</span></div>
+            <div><span class="method m-post">POST</span><span class="ep">/auth/login</span></div>
+            <div><span class="method m-get">GET</span><span class="ep">/auth/me</span></div>
+            <div><span class="method m-post">POST</span><span class="ep">/auth/logout</span></div>
+            <br/>
+            <div><span class="method m-post">POST</span><span class="ep">/students</span></div>
+            <div><span class="method m-get">GET</span><span class="ep">/students</span><span class="ep-desc">?page=0&size=5&query=</span></div>
+            <div><span class="method m-put">PUT</span><span class="ep">/students/{id}</span></div>
+            <div><span class="method m-delete">DEL</span><span class="ep">/students/{id}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="tech-bg" id="technology">
+    <div class="section">
+      <p class="section-label">Built With</p>
+      <h2 class="section-title">Technology Stack</h2>
+      <p class="section-desc">Standard open-source technologies — nothing proprietary or unusual.</p>
+      <div class="tech-grid">
+        <div class="tech-pill" id="tech-java"><span>☕</span> Java 17</div>
+        <div class="tech-pill" id="tech-spring"><span>🍃</span> Spring Boot</div>
+        <div class="tech-pill" id="tech-mvc"><span>🌐</span> Spring Web MVC</div>
+        <div class="tech-pill" id="tech-jpa"><span>🗄️</span> Spring Data JPA</div>
+        <div class="tech-pill" id="tech-hibernate"><span>🔗</span> Hibernate ORM</div>
+        <div class="tech-pill" id="tech-mysql"><span>🐬</span> MySQL</div>
+        <div class="tech-pill" id="tech-bcrypt"><span>🔒</span> BCrypt (spring-security-crypto)</div>
+        <div class="tech-pill" id="tech-maven"><span>📦</span> Maven</div>
+        <div class="tech-pill" id="tech-html"><span>🖥️</span> Vanilla HTML/CSS/JS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-band" id="cta">
+    <h2>Want to try it?</h2>
+    <p>Register your institution and start adding student records right away.</p>
+    <a href="/register.html" class="btn-white" id="cta-btn">Register Now →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>EduTrack — Student Data Management · Built with Java &amp; Spring Boot</p>
+    <ul class="footer-links">
+      <li><a href="/login.html" id="footer-login-link">Login</a></li>
+      <li><a href="/register.html" id="footer-register-link">Register</a></li>
+      <li><a href="#features" id="footer-features-link">Features</a></li>
+      <li><a href="#technology" id="footer-tech-link">Technology</a></li>
+    </ul>
   </footer>
 
-  <!-- ─── SCROLL REVEAL JS ──────────────────────── -->
-  <script>
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          // stagger siblings in the same parent
-          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
-          const idx = siblings.indexOf(entry.target);
-          setTimeout(() => {
-            entry.target.classList.add('visible');
-          }, idx * 80);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-    reveals.forEach(el => observer.observe(el));
-
-    // Navbar scroll effect
-    const nav = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      nav.style.background = window.scrollY > 60
-        ? 'rgba(7,7,19,0.95)'
-        : 'rgba(7,7,19,0.75)';
-    });
-  </script>
 </body>
 </html>

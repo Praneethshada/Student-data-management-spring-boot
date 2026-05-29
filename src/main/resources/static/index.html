@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+<script>(function(){var t=localStorage.getItem('edu-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,6 +25,20 @@
         --line: #d0dae2;
         --shadow: 0 14px 30px rgba(15, 35, 46, 0.14);
         --radius: 18px;
+      }
+
+      html[data-theme="dark"] {
+        --bg-1:   #0f172a;
+        --bg-2:   #1e293b;
+        --card:   rgba(30, 41, 59, 0.95);
+        --ink:    #f1f5f9;
+        --muted:  #94a3b8;
+        --accent: #2dd4bf;
+        --accent-2: #0f766e;
+        --warn:   #f87171;
+        --ok:     #4ade80;
+        --line:   #334155;
+        --shadow: 0 14px 30px rgba(0,0,0,0.4);
       }
 
       /* ── Institution header bar ─────────────────── */
@@ -72,7 +87,24 @@
         cursor: pointer;
         transition: background 0.2s, transform 0.15s;
       }
+      .btn-logout { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
       .btn-logout:hover { background: #fecaca; transform: translateY(-1px); }
+      html[data-theme="dark"] .btn-logout { background: rgba(220,38,38,0.15); color: #fca5a5; border-color: rgba(220,38,38,0.3); }
+
+      .theme-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px; height: 34px;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .theme-toggle-btn:hover { background: rgba(15,118,110,0.1); }
 
       * {
         box-sizing: border-box;
@@ -88,6 +120,9 @@
           radial-gradient(900px 520px at 94% 6%, #b7d9e6 0%, transparent 56%),
           linear-gradient(165deg, var(--bg-1), var(--bg-2));
         padding: 32px 16px;
+      }
+      html[data-theme="dark"] body {
+        background: linear-gradient(165deg, var(--bg-1), var(--bg-2));
       }
 
       .wrap {
@@ -380,6 +415,7 @@
         <button class="btn-logout" id="logoutBtn" type="button">
           <span>⎋</span> Logout
         </button>
+        <button class="theme-toggle-btn" id="themeToggle" type="button" title="Toggle theme">🌙</button>
       </div>
 
       <section class="hero">
@@ -553,6 +589,20 @@
         await fetch('/auth/logout', { method: 'POST' });
         window.location.href = '/login.html';
       });
+
+      // ── Theme toggle ──────────────────────────────────────────────────────────
+      (function() {
+        var html = document.documentElement;
+        var btn  = document.getElementById('themeToggle');
+        function sync() { btn.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
+        sync();
+        btn.addEventListener('click', function() {
+          var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          localStorage.setItem('edu-theme', next);
+          sync();
+        });
+      })();
 
       // Helper: redirect to login on any 401 from the student API
       async function guardedFetch(url, options) {
